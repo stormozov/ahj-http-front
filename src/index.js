@@ -1,2 +1,3 @@
-// Сюда импортируются файлы приложения
+import './scss/index.scss';
+
 import './js/app';
