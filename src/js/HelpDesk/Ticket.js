@@ -1,3 +1,6 @@
+/**
+ * Класс для хранения информации о тикете
+ */
 export default class Ticket {
   constructor({ id, name, description, status, created }) {
     this.id = id;

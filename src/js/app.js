@@ -1,9 +1,9 @@
-import HelpDesk from './HelpDesk';
-import TicketService from './TicketService';
+import HelpDesk from './HelpDesk/HelpDesk';
+import TicketService from './HelpDesk/TicketService';
 
-const root = document.getElementById('root');
+const ticketList = document.querySelector('.ticket-service__ticket-list');
 
 const ticketService = new TicketService();
-const app = new HelpDesk(root, ticketService);
+const app = new HelpDesk(ticketList, ticketService);
 
 app.init();
