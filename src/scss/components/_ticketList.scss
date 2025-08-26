@@ -1,0 +1,83 @@
+@use '../base/keyframes';
+
+.ticket-service {
+  &__ticket-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    margin-top: 12px;
+  }
+
+  &__ticket-item {
+    display: grid;
+    grid-template: auto / auto 1fr auto;
+    align-items: center;
+
+    padding: 24px;
+
+    background-color: #f1eded;
+    border-radius: 12px;
+
+    @media (max-width: 560px) {
+      grid-template: auto auto / auto 1fr;
+      gap: 12px 0;
+    }
+    @media (max-width: 425px) {
+      padding: 12px;
+    }
+  }
+
+  &__ticket-checkbox {
+    width: 24px;
+    height: 24px;
+
+    cursor: pointer;
+  }
+
+  &__ticket-info {
+    display: flex;
+    justify-content: space-between;
+
+    margin: 0 24px 0 12px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+
+  &__ticket-actions {
+    display: flex;
+
+    @media (max-width: 560px) {
+      grid-column: 1 / span 2;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    button {
+      transition: all 0.3s ease-in-out;
+      
+      &:hover {
+        animation: rotateTo45deg 0.6s ease-in-out;
+      }
+
+      &:not(:last-child) {
+        margin-right: 12px;
+      }
+    }
+  }
+
+  &__update-ticket-btn {
+    &:hover {
+      color: #466eb8;
+    }
+  }
+
+  &__delete-ticket-btn {
+    &:hover {
+      color: #ff0000;
+    }
+  }
+}

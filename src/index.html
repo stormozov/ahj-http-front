@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" >
     <title>HelpDesk</title>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,delete,edit" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="container">
+        <div class="ticket-service">
+          <header class="ticket-service__header">
+            <h1 class="ticket-service__title">HelpDesk</h1>
+          </header>
+          <div class="ticket-service__content">
+            <button class="ticket-service__add-ticket-btn">
+              <span class="btn-icon material-symbols-outlined">add</span>
+              Добавить тикет
+            </button>
+            <ul class="ticket-service__ticket-list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

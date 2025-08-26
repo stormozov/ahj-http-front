@@ -9,11 +9,13 @@ export default class TicketView {
     this.container = container;
   }
 
+  /**
+   * Отображает список тикетов
+   * @param {Ticket[]} tickets - список тикетов
+   */
   render(tickets) {
     tickets.forEach((ticket) => {
       const ticketItem = this._createTicketItem(ticket);
-      console.log(ticketItem);
-
       this.container.append(ticketItem);
     });
   }
@@ -28,7 +30,7 @@ export default class TicketView {
     ticketItem.className = 'ticket-service__ticket-item';
 
     const ticketStatus = document.createElement('input');
-    ticketStatus.className = 'ticket-service__ticket-status';
+    ticketStatus.className = 'ticket-service__ticket-checkbox';
     ticketStatus.id = ticket.id;
     ticketStatus.type = 'checkbox';
     ticketStatus.checked = ticket.status;
@@ -71,18 +73,50 @@ export default class TicketView {
     const btnContainer = document.createElement('div');
     btnContainer.className = 'ticket-service__ticket-actions';
 
-    const updateTicketBtn = document.createElement('button');
-    updateTicketBtn.className = 'ticket-service__update-ticket-btn';
-    updateTicketBtn.textContent = '✍';
-    updateTicketBtn.title = 'Редактировать';
+    // Кнопка "Редактировать"
+    const updateTicketBtn = this._createButton('edit', 'ticket-service__update-ticket-btn');
 
-    const deleteTicketBtn = document.createElement('button');
-    deleteTicketBtn.className = 'ticket-service__delete-ticket-btn';
-    deleteTicketBtn.textContent = '❌';
-    deleteTicketBtn.title = 'Удалить';
+    // Кнопка "Удалить"
+    const deleteTicketBtn = this._createButton('delete', 'ticket-service__delete-ticket-btn');
 
+    // Добавляем кнопки в контейнер
     btnContainer.append(updateTicketBtn, deleteTicketBtn);
 
     return btnContainer;
+  }
+
+  /**
+   * Создает кнопку
+   *
+   * @param {string} iconName - имя иконки
+   * @param {string} btnClassName - класс кнопки
+   * @param {string} text - текст кнопки
+   *
+   * @return {HTMLElement} HTML-элемент кнопки
+   */
+  _createButton(iconName = '', btnClassName = '', text = '') {
+    const button = document.createElement('button');
+    button.className = `ticket-service__ticket-btn ${btnClassName}`;
+    button.textContent = text;
+
+    if (iconName) {
+      const icon = this._createIcon(iconName);
+      button.prepend(icon);
+    }
+
+    return button;
+  }
+
+  /**
+   * Создает иконку
+   * @param {string} iconName - имя иконки
+   * @return {HTMLElement} HTML-элемент иконки
+   */
+  _createIcon(iconName) {
+    const icon = document.createElement('span');
+    icon.className = 'material-symbols-outlined';
+    icon.textContent = iconName;
+
+    return icon;
   }
 }

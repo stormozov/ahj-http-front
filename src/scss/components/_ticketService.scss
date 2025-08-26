@@ -1,0 +1,43 @@
+@use '../base/keyframes';
+
+.ticket-service {
+  padding: 48px 0;
+
+  &__title {
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  &__add-ticket-btn {
+    transition: all 0.3s ease-in-out;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: auto;
+    padding: 12px 24px;
+
+    background-color: #000;
+    border-radius: 12px;
+
+    color: #fff;
+
+    &:hover {
+      background-color: #466eb8;
+
+      span {
+        animation: rotateTo45deg 0.6s ease-in-out;
+      }
+    }
+
+    @media (max-width: 425px) {
+      width: 100%;
+      padding: 16px 24px;
+    }
+
+    span {
+      margin-right: 12px;
+    }
+  }
+}
