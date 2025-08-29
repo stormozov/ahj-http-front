@@ -10,7 +10,7 @@ export default class TicketView {
   }
 
   /**
-   * Отображает список тикетов
+   * Отображает список тикетов на странице с использованием HTML-разметки
    * @param {Ticket[]} tickets - список тикетов
    */
   render(tickets) {
@@ -21,7 +21,7 @@ export default class TicketView {
   }
 
   /**
-   * Создает разметку для одного тикета
+   * Создает HTML-разметку для одного тикета
    * @param {Ticket} ticket - объект с информацией о тикете
    * @return {HTMLElement} HTML-элемент тикета
    */
@@ -35,38 +35,55 @@ export default class TicketView {
     ticketStatus.type = 'checkbox';
     ticketStatus.checked = ticket.status;
 
-    const ticketInfo = this._createTicketInfo(ticket);
+    const ticketInfo = this._createTicketTextInfo(ticket);
+    const ticketCreatedAt = this._createTicketCreatedAt(ticket.created);
     const ticketBtns = this._createTicketBtns();
 
-    ticketItem.append(ticketStatus, ticketInfo, ticketBtns);
+    ticketItem.append(ticketStatus, ticketInfo, ticketCreatedAt, ticketBtns);
 
     return ticketItem;
   }
 
   /**
-   * Создает разметку для информации о тикете
+   * Создает HTML-разметку для текстовой информации о тикете
    * @param {Ticket} ticket - объект с информацией о тикете
    * @return {HTMLElement} HTML-элемент информации о тикете
    */
-  _createTicketInfo(ticket) {
+  _createTicketTextInfo(ticket) {
     const ticketInfo = document.createElement('div');
-    ticketInfo.className = 'ticket-service__ticket-info';
+    ticketInfo.className = 'ticket-service__ticket-text-info';
 
-    const ticketName = document.createElement('p');
-    ticketName.className = 'ticket-service__ticket-name';
-    ticketName.textContent = ticket.name;
+    const ticketShortDesc = document.createElement('p');
+    ticketShortDesc.className = 'ticket-service__ticket-short-desc';
+    ticketShortDesc.textContent = ticket.name;
 
-    const ticketCreatedAt = document.createElement('time');
-    ticketCreatedAt.className = 'ticket-service__ticket-created';
-    ticketCreatedAt.textContent = formatDate(ticket.created);
+    ticketInfo.append(ticketShortDesc);
 
-    ticketInfo.append(ticketName, ticketCreatedAt);
+    if (ticket.description) {
+      const ticketFullDesc = document.createElement('p');
+      ticketFullDesc.className = 'ticket-service__ticket-full-desc';
+      ticketFullDesc.textContent = ticket.description;
+      ticketInfo.append(ticketFullDesc);
+    }
 
     return ticketInfo;
   }
 
   /**
-   * Создает разметку для кнопок управления тикетом
+   * Создает HTML-разметку для даты создания тикета
+   * @param {Date} date - дата создания тикета
+   * @return {HTMLElement} HTML-элемент даты создания тикета
+   */
+  _createTicketCreatedAt(date) {
+    const ticketCreatedAt = document.createElement('time');
+    ticketCreatedAt.className = 'ticket-service__ticket-created';
+    ticketCreatedAt.textContent = formatDate(date);
+
+    return ticketCreatedAt;
+  }
+
+  /**
+   * Создает HTML-разметку для кнопок управления тикетом
    * @return {HTMLElement} HTML-элемент кнопок управления тикетом
    */
   _createTicketBtns() {
@@ -86,7 +103,7 @@ export default class TicketView {
   }
 
   /**
-   * Создает кнопку
+   * Создает HTML-элемент кнопки
    *
    * @param {string} iconName - имя иконки
    * @param {string} btnClassName - класс кнопки
@@ -108,7 +125,7 @@ export default class TicketView {
   }
 
   /**
-   * Создает иконку
+   * Создает HTML-элемент иконки
    * @param {string} iconName - имя иконки
    * @return {HTMLElement} HTML-элемент иконки
    */

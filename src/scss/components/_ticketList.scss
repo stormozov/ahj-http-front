@@ -11,8 +11,9 @@
 
   &__ticket-item {
     display: grid;
-    grid-template: auto / auto 1fr auto;
+    grid-template: auto / auto 1fr auto auto;
     align-items: center;
+    gap: 24px;
 
     padding: 24px;
 
@@ -20,8 +21,8 @@
     border-radius: 12px;
 
     @media (max-width: 560px) {
-      grid-template: auto auto / auto 1fr;
-      gap: 12px 0;
+      grid-template: auto / auto 1fr auto;
+      gap: 12px;
     }
     @media (max-width: 425px) {
       padding: 12px;
@@ -33,28 +34,30 @@
     height: 24px;
 
     cursor: pointer;
+
+    @media (max-width: 560px) {
+      grid-row: span 2;
+    }
   }
 
-  &__ticket-info {
-    display: flex;
-    justify-content: space-between;
-
-    margin: 0 24px 0 12px;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: 6px;
+  &__ticket-text-info {
+    @media (max-width: 560px) {
+      grid-column: span 2;
     }
+  }
+
+  &__ticket-short-desc {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  &__ticket-full-desc {
+    margin-top: 6px;
+    font-size: inherit;
   }
 
   &__ticket-actions {
     display: flex;
-
-    @media (max-width: 560px) {
-      grid-column: 1 / span 2;
-      justify-content: flex-end;
-      margin-top: 12px;
-    }
 
     button {
       transition: all 0.3s ease-in-out;
