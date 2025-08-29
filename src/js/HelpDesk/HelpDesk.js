@@ -45,9 +45,7 @@ export default class HelpDesk {
   _setupEventListeners() {
     // Обработчик клика по кнопке добавления
     const addBtn = document.querySelector('.ticket-service__add-ticket-btn');
-    if (addBtn) {
-      addBtn.addEventListener('click', () => this.ticketForm.show());
-    }
+    if (addBtn) addBtn.addEventListener('click', () => this.ticketForm.show());
 
     // Обработчик клика по кнопке редактирования
     this.container.addEventListener('click', (e) => {
@@ -64,8 +62,6 @@ export default class HelpDesk {
         const ticketItem = e.target.closest('.ticket-service__ticket-item');
         const ticketName = ticketItem.querySelector('.ticket-service__ticket-short-desc').textContent;
         const ticketId = ticketItem.querySelector('input[type="checkbox"]').id;
-
-        console.log(ticketId, ticketName);
 
         this._handleDeleteTicket(ticketId, ticketName);
       }
@@ -170,17 +166,22 @@ export default class HelpDesk {
         </div>
       `;
 
-    modal.querySelector('#confirmBtn').addEventListener('click', () => {
-      onConfirm();
-      modal.remove();
-    });
+    const handlers = {
+      '#confirmBtn': () => {
+        onConfirm();
+        modal.remove();
+      },
+      '#cancelBtn': () => modal.remove(),
+      '.modal__close-btn': () => modal.remove(),
+    };
 
-    modal.querySelector('#cancelBtn').addEventListener('click', () => {
-      modal.remove();
-    });
-
-    modal.querySelector('.modal__close-btn').addEventListener('click', () => {
-      modal.remove();
+    modal.addEventListener('click', (e) => {
+      for (const [selector, handler] of Object.entries(handlers)) {
+        if (e.target.matches(selector)) {
+          handler();
+          return;
+        }
+      }
     });
 
     return modal;
@@ -209,12 +210,8 @@ export default class HelpDesk {
       </div>
     `;
 
-    modal.querySelector('#closeBtn').addEventListener('click', () => {
-      modal.remove();
-    });
-
-    modal.querySelector('.modal__close-btn').addEventListener('click', () => {
-      modal.remove();
+    modal.addEventListener('click', (e) => {
+      if (e.target.matches('#closeBtn, .modal__close-btn')) modal.remove();
     });
 
     document.body.appendChild(modal);
