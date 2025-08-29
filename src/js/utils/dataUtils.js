@@ -1,4 +1,4 @@
-export const formatDate = (timestamp) => {
+const formatDate = (timestamp) => {
   const date = new Date(Number(timestamp));
 
   const day = String(date.getDate()).padStart(2, '0');
@@ -9,3 +9,5 @@ export const formatDate = (timestamp) => {
 
   return `${day}.${month}.${year} ${hours}:${minutes}`;
 };
+
+export default formatDate;

@@ -1,4 +1,4 @@
-import { formatDate } from '../utils/dataUtils';
+import formatDate from '../utils/dataUtils';
 
 /**
  *  Класс для отображения тикетов на странице.
