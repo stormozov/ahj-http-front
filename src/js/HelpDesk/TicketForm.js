@@ -8,6 +8,9 @@ export default class TicketForm {
     this.form = null;
     this.isEditMode = false;
     this.currentTicketId = null;
+
+    // Привязываем методы
+    this._handleSubmit = this._handleSubmit.bind(this);
   }
 
   /**
@@ -152,18 +155,29 @@ export default class TicketForm {
     const overlay = modal.querySelector('.modal__overlay');
 
     const closeModal = () => {
+      this._cleanupEventListeners(modal);
       modal.remove();
       if (this.onCancel) this.onCancel();
     };
 
-    cancelBtn.addEventListener('click', closeModal);
-    closeBtn.addEventListener('click', closeModal);
-    overlay.addEventListener('click', closeModal);
+    // Назначаем обработчики только если элементы существуют
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (overlay) {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+      });
+    }
 
     // Закрытие по ESC
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModal();
     });
+
+    document.addEventListener('keydown', this._handleEscape);
+
+    // Сохраняем ссылки на обработчики для последующей очистки
+    this._modalCloseHandlers = { cancelBtn, closeBtn, overlay, closeModal };
   }
 
   /**
@@ -200,5 +214,26 @@ export default class TicketForm {
       const firstInput = modal.querySelector('input, textarea');
       if (firstInput) firstInput.focus();
     }, 100);
+  }
+
+  /**
+   * Удаляет все установленные обработчики событий
+   */
+  _cleanupEventListeners() {
+    const handlers = this._modalCloseHandlers;
+    if (!handlers) return;
+
+    const { cancelBtn, closeBtn, overlay, closeModal } = handlers;
+
+    if (cancelBtn) cancelBtn.removeEventListener('click', closeModal);
+    if (closeBtn) closeBtn.removeEventListener('click', closeModal);
+    if (overlay) overlay.removeEventListener('click', closeModal);
+
+    document.removeEventListener('keydown', this._handleEscape);
+
+    // Очистка
+    delete this._handleSubmit;
+    delete this._handleEscape;
+    delete this._modalCloseHandlers;
   }
 }
