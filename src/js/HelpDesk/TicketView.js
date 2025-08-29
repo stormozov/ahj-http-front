@@ -5,8 +5,9 @@ import { formatDate } from '../utils/dataUtils';
  *  Он содержит методы для генерации разметки тикета.
  * */
 export default class TicketView {
-  constructor(container) {
+  constructor(container, ticketServiceClass = 'ticket-service') {
     this.container = container;
+    this.ticketServiceClass = ticketServiceClass;
   }
 
   /**
@@ -14,6 +15,7 @@ export default class TicketView {
    * @param {Ticket[]} tickets - список тикетов
    */
   render(tickets) {
+    this.container.replaceChildren();
     tickets.forEach((ticket) => {
       const ticketItem = this._createTicketItem(ticket);
       this.container.append(ticketItem);
@@ -26,14 +28,19 @@ export default class TicketView {
    * @return {HTMLElement} HTML-элемент тикета
    */
   _createTicketItem(ticket) {
+    if (!ticket || typeof ticket !== 'object') {
+      console.warn('Invalid ticket data', ticket);
+      return null;
+    }
+
     const ticketItem = document.createElement('li');
-    ticketItem.className = 'ticket-service__ticket-item';
+    ticketItem.className = `${this.ticketServiceClass}__ticket-item`;
 
     const ticketStatus = document.createElement('input');
-    ticketStatus.className = 'ticket-service__ticket-checkbox';
+    ticketStatus.className = `${this.ticketServiceClass}__ticket-checkbox`;
     ticketStatus.id = ticket.id;
     ticketStatus.type = 'checkbox';
-    ticketStatus.checked = ticket.status;
+    ticketStatus.checked = Boolean(ticket.status);
 
     const ticketInfo = this._createTicketTextInfo(ticket);
     const ticketCreatedAt = this._createTicketCreatedAt(ticket.created);
@@ -51,17 +58,17 @@ export default class TicketView {
    */
   _createTicketTextInfo(ticket) {
     const ticketInfo = document.createElement('div');
-    ticketInfo.className = 'ticket-service__ticket-text-info';
+    ticketInfo.className = `${this.ticketServiceClass}__ticket-text-info`;
 
     const ticketShortDesc = document.createElement('p');
-    ticketShortDesc.className = 'ticket-service__ticket-short-desc';
+    ticketShortDesc.className = `${this.ticketServiceClass}__ticket-short-desc`;
     ticketShortDesc.textContent = ticket.name;
 
     ticketInfo.append(ticketShortDesc);
 
     if (ticket.description) {
       const ticketFullDesc = document.createElement('p');
-      ticketFullDesc.className = 'ticket-service__ticket-full-desc';
+      ticketFullDesc.className = `${this.ticketServiceClass}__ticket-full-desc`;
       ticketFullDesc.textContent = ticket.description;
       ticketInfo.append(ticketFullDesc);
     }
@@ -76,7 +83,7 @@ export default class TicketView {
    */
   _createTicketCreatedAt(date) {
     const ticketCreatedAt = document.createElement('time');
-    ticketCreatedAt.className = 'ticket-service__ticket-created';
+    ticketCreatedAt.className = `${this.ticketServiceClass}__ticket-created`;
     ticketCreatedAt.textContent = formatDate(date);
 
     return ticketCreatedAt;
@@ -88,18 +95,26 @@ export default class TicketView {
    */
   _createTicketBtns() {
     const btnContainer = document.createElement('div');
-    btnContainer.className = 'ticket-service__ticket-actions';
+    btnContainer.className = `${this.ticketServiceClass}__ticket-actions`;
 
-    // Кнопка "Редактировать"
-    const updateTicketBtn = this._createButton('edit', 'ticket-service__update-ticket-btn');
-
-    // Кнопка "Удалить"
-    const deleteTicketBtn = this._createButton('delete', 'ticket-service__delete-ticket-btn');
+    const updateTicketBtn = this._createActionButtonHandler('edit');
+    const deleteTicketBtn = this._createActionButtonHandler('delete');
 
     // Добавляем кнопки в контейнер
     btnContainer.append(updateTicketBtn, deleteTicketBtn);
 
     return btnContainer;
+  }
+
+  /**
+   * Обработчик создания HTML-элемента кнопки
+   * @param {string} type - тип необходимой для создания кнопки
+   * @return {HTMLElement} HTML-элемент кнопки с выбранным типом
+   */
+  _createActionButtonHandler(type) {
+    const icons = { edit: 'edit', delete: 'delete' };
+    const labels = { edit: 'Редактировать', delete: 'Удалить' };
+    return this._createButton(icons[type], `${this.ticketServiceClass}__${type}-ticket-btn`, '', labels[type]);
   }
 
   /**
@@ -111,10 +126,16 @@ export default class TicketView {
    *
    * @return {HTMLElement} HTML-элемент кнопки
    */
-  _createButton(iconName = '', btnClassName = '', text = '') {
+  _createButton(iconName = '', btnClassName = '', text = '', ariaLabel = '') {
     const button = document.createElement('button');
-    button.className = `ticket-service__ticket-btn ${btnClassName}`;
+    button.className = `${this.ticketServiceClass}__ticket-btn ${btnClassName}`;
     button.textContent = text;
+
+    if (ariaLabel) {
+      button.setAttribute('aria-label', ariaLabel);
+    } else if (!text) {
+      button.setAttribute('aria-label', iconName);
+    }
 
     if (iconName) {
       const icon = this._createIcon(iconName);
